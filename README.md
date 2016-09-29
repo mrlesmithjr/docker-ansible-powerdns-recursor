@@ -1,76 +1,21 @@
 Repo Info
 =========
-This repo contains both PowerDNS Authoritative and Recursor for the following
+This repo contains PowerDNS Recursor for the following
 versions..  
-`3.x` - latest  
-`4.x`
+`3.7.3` - latest  
+`4.x` - development
 
 Each of these are available separately using [Docker] hub as:
-`mrlesmithjr/powerdns-authoritative:3.x`  
-`mrlesmithjr/powerdns-recursor:3.x`  
-`mrlesmithjr/powerdns-authoritative:4.x`  
+`mrlesmithjr/powerdns-recursor`
+`mrlesmithjr/powerdns-recursor:3.7.3`
 `mrlesmithjr/powerdns-recursor:4.x`
-
-Environment settings for Authoritative Server
----------------------------------------------
-Below are the defaults in the `Authoritative/Dockerfile` for Authoritative Server.
-```
-# Define environment variables
-ENV PDNS_ALLOW_DDNS_UPDATE=yes \
-    PDNS_ALLOW_DDNS_UPDATE_FROM=0.0.0.0/0 \
-    PDNS_API_KEY=changeme \
-    PDNS_GMYSQL_DBNAME=powerdns \
-    PDNS_GMYSQL_HOST=db \
-    PDNS_GMYSQL_PASSWORD=powerdns \
-    PDNS_GMYSQL_USER=powerdns \
-    PDNS_JSON_INTERFACE=yes \
-    PDNS_LOG_DNS_QUERIES=yes \
-    PDNS_RECURSOR_SERVER=pdns_recursor \
-    PDNS_WEBSERVER_ADDRESS=0.0.0.0 \
-    PDNS_WEBSERVER_PASSWORD=changeme \
-    PDNS_WEBSERVER_PORT=8081 \
-    PDNS_WEBSERVER=yes
-```
-
-Consuming from command line:
-----------------------------
-Spin up DB:
-```
-docker run -d --name db -p 33306:3306 \
-  -e MYSQL_ROOT_PASSWORD="powerdns" \
-  -e MYSQL_DATABASE="powerdns" \
-  -e MYSQL_USER="powerdns" \
-  -e MYSQL_PASSWORD="powerdns" \
-  mrlesmithjr/mysql
-```
 
 Spin up PDNS Recursor:
 ```
 docker run -d --name pdns-recursor \
   -e PDNS_RECURSOR_LOCAL_ADDRESS="0.0.0.0" \
-  mrlesmithjr/powerdns-recursor:3.x
-```
-
-Spin up PDNS Authoritative:
-```
-docker run -d --name pdns-authoritative \
-  -p 53:53 -p 53:53/udp -p 8081:8081 \
-  --link db:db --link pdns-recursor:pdns-recursor \
-  -e PDNS_ALLOW_DDNS_UPDATE="yes" \
-  -e PDNS_ALLOW_DDNS_UPDATE_FROM="0.0.0.0/0" \
-  -e PDNS_API_KEY="changeme" \
-  -e PDNS_GMYSQL_DBNAME="powerdns" \
-  -e PDNS_GMYSQL_HOST="db" \
-  -e PDNS_GMYSQL_PASSWORD="powerdns" \
-  -e PDNS_GMYSQL_USER="powerdns" \
-  -e PDNS_JSON_INTERFACE="yes" \
-  -e PDNS_LOG_DNS_QUERIES="yes" \
-  -e PDNS_RECURSOR_SERVER="pdns-recursor" \
-  -e PDNS_WEBSERVER_ADDRESS="0.0.0.0" \
-  -e PDNS_WEBSERVER_PASSWORD="changeme" \
-  -e PDNS_WEBSERVER_PORT="8081" \
-  -e PDNS_WEBSERVER="yes" \
-  mrlesmithjr/powerdns-authoritative:3.x
+  -e PDNS_RECURSOR_LISTEN_PORT="5300" \
+  mrlesmithjr/powerdns-recursor:3.7.3
 ```
 
 Consuming using `docker-compose`

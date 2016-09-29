@@ -1,0 +1,9 @@
+---
+- hosts: localhost
+  become: true
+  connection: local
+  tasks:
+    - name: Configuring PowerDNS Recursor
+      template:
+        src: "/recursor.conf.j2"
+        dest: "/etc/powerdns/recursor.conf"
